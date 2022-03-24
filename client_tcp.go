@@ -158,7 +158,7 @@ func (sf *TCPClientProvider) Send(slaveID byte, request ProtocolDataUnit) (Proto
 	if err != nil {
 		return response, err
 	}
-	_, err := sf.SendRawFrame(aduRequest)
+	aduResponse, err := sf.SendRawFrame(aduRequest)
 	if err != nil {
 		return response, err
 	}
