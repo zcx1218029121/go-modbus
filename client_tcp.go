@@ -154,20 +154,19 @@ func (sf *TCPClientProvider) Send(slaveID byte, request ProtocolDataUnit) (Proto
 	// add transaction id
 	tid := uint16(atomic.AddUint32(&sf.transactionID, 1))
 
-	head, aduRequest, err := frame.encodeTCPFrame(tid, slaveID, request)
+	_, aduRequest, err := frame.encodeTCPFrame(tid, slaveID, request)
 	if err != nil {
 		return response, err
 	}
-	aduResponse, err := sf.SendRawFrame(aduRequest)
+	_, err := sf.SendRawFrame(aduRequest)
 	if err != nil {
 		return response, err
 	}
-	rspHead, pdu, err := decodeTCPFrame(aduResponse)
+	_, pdu, err := decodeTCPFrame(aduResponse)
 	if err != nil {
 		return response, err
 	}
 	response = ProtocolDataUnit{pdu[0], pdu[1:]}
-	err = verifyTCPFrame(head, rspHead, request, response)
 	return response, err
 }
 
